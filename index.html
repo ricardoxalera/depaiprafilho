@@ -81,7 +81,15 @@
       output.textContent += `\nNatália: ${resposta}`;
     }
 
-    window.onload = () => speak("Oi! Eu sou a Natália, sua consultora da RedeNutri. Me diga como posso te ajudar hoje?");
+    window.onload = () => {
+  // Força a parada de qualquer fala anterior do navegador
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+
+  speak("Oi! Eu sou a Natália, sua consultora da RedeNutri. Me diga como posso te ajudar hoje?");
+};
+
     function testarSol() {
   const textoTeste = "Olá! Eu sou a Natália. Estou pronta para te ajudar com recomendações naturais.";
   speak(textoTeste);
