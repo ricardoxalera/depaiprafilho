@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Natália - IA com Voz</title>
+  <title>NatÃ¡lia - IA com Voz Realista</title>
   <style>
     body { font-family: sans-serif; padding: 2rem; background: #f4f4f4; }
     .chatbox { background: white; padding: 1rem; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -11,36 +11,42 @@
 </head>
 <body>
   <div class="chatbox">
-    <h2>????? Natália - Sua Consultora Natural</h2>
-    <p id="output">Clique em "Falar" para começar a conversar comigo por voz.</p>
-    <button onclick="startRecognition()">??? Falar</button>
+    <h2>ğŸ‘©â€âš•ï¸ NatÃ¡lia - Sua Consultora Natural</h2>
+    <p id="output">Clique em "Falar" para comeÃ§ar a conversar comigo por voz.</p>
+    <button onclick="startRecognition()">ğŸ¡ï¸ Falar</button>
   </div>
 
   <script>
-    const synth = window.speechSynthesis;
     const output = document.getElementById('output');
 
-    function speak(text) {
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'pt-BR';
+    async function speak(text) {
+      try {
+        const response = await fetch("https://api.openai.com/v1/audio/speech", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer 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",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "tts-1",
+            voice: "nova",
+            input: text
+          })
+        });
 
-      let voices = synth.getVoices();
-      if (!voices.length) {
-        synth.onvoiceschanged = () => {
-          utter.voice = synth.getVoices().find(voice => voice.lang === 'pt-BR');
-          synth.speak(utter);
-        };
-        return;
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        audio.play();
+      } catch (error) {
+        console.error("Erro ao gerar voz:", error);
       }
-
-      utter.voice = voices.find(voice => voice.lang === 'pt-BR');
-      synth.speak(utter);
     }
 
     function startRecognition() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("Seu navegador não suporta reconhecimento de voz.");
+        alert("Seu navegador nÃ£o suporta reconhecimento de voz.");
         return;
       }
 
@@ -50,8 +56,8 @@
 
       recognition.onresult = (event) => {
         const userText = event.results[0][0].transcript;
-        output.textContent = `Você disse: "${userText}"`;
-        responderNatália(userText);
+        output.textContent = `VocÃª disse: "${userText}"`;
+        responderNatalia(userText);
       };
 
       recognition.onerror = (event) => {
@@ -59,20 +65,23 @@
       };
     }
 
-    function responderNatália(frase) {
-      let resposta = "Não entendi bem, pode repetir?";
-      if (frase.includes("inchaço") || frase.includes("barriga")) {
-        resposta = "Entendi! Para inchaço abdominal, recomendo o Kit Detox com chá de hortelã, sene e nossa granola com cúrcuma.";
-      } else if (frase.includes("ansiedade")) {
-        resposta = "A ansiedade é muito comum. Posso sugerir o Kit Relax com chá de camomila, melissa e lavanda.";
-      } else if (frase.includes("sono") || frase.includes("insônia")) {
-        resposta = "Para melhorar o sono, temos um kit ótimo com chá de maracujá, mulungu e mel puro.";
+    function responderNatalia(frase) {
+      let resposta = "NÃ£o entendi bem, pode repetir?";
+      const texto = frase.toLowerCase();
+
+      if (texto.includes("inchaÃ§o") || texto.includes("inchada") || texto.includes("barriga") || texto.includes("estufada")) {
+        resposta = "Ah, entendi! O inchaÃ§o abdominal Ã© bem comum. Recomendo o nosso Kit Detox com chÃ¡ de hortelÃ£, sene e granola com cÃºrcuma.";
+      } else if (texto.includes("ansiedade") || texto.includes("ansioso") || texto.includes("nervoso") || texto.includes("preocupado")) {
+        resposta = "Entendi, ansiedade pode ser bem difÃ­cil. Sugiro o Kit Relax com chÃ¡ de camomila, melissa e lavanda.";
+      } else if (texto.includes("sono") || texto.includes("insÃ´nia") || texto.includes("dormir") || texto.includes("acordando")) {
+        resposta = "Para melhorar seu sono, temos um kit natural com chÃ¡ de maracujÃ¡, mulungu e mel puro. Pode te ajudar a relaxar.";
       }
+
       speak(resposta);
-      output.textContent += `\nNatália: ${resposta}`;
+      output.textContent += `\nNatÃ¡lia: ${resposta}`;
     }
 
-    window.onload = () => speak("Oi! Eu sou a Natália, sua consultora da RedeNutri. Me diga como posso te ajudar hoje?");
+    window.onload = () => speak("Oi! Eu sou a NatÃ¡lia, sua consultora da RedeNutri. Me diga como posso te ajudar hoje?");
   </script>
 </body>
 </html>
