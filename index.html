@@ -13,7 +13,7 @@
   <div class="chatbox">
     <h2>👩‍⚕️ Natália - Sua Consultora Natural</h2>
     <p id="output">Clique em "Falar" para começar a conversar comigo por voz.</p>
-    <button onclick="startRecognition()">🎙️ Falar</button>
+    <button onclick="startRecognition()">🎡️ Falar</button>
   </div>
 
   <script>
@@ -33,7 +33,7 @@
         return;
       }
 
-      utter.voice = voices.find(voice => voice.lang === 'pt-BR');
+      utter.voice = voices.find(voice => voice.name === 'Microsoft Maria - Portuguese (Brazil)');
       synth.speak(utter);
     }
 
@@ -61,13 +61,16 @@
 
     function responderNatália(frase) {
       let resposta = "Não entendi bem, pode repetir?";
-      if (frase.includes("inchaço") || frase.includes("barriga")) {
-        resposta = "Entendi! Para inchaço abdominal, recomendo o Kit Detox com chá de hortelã, sene e nossa granola com cúrcuma.";
-      } else if (frase.includes("ansiedade")) {
-        resposta = "A ansiedade é muito comum. Posso sugerir o Kit Relax com chá de camomila, melissa e lavanda.";
-      } else if (frase.includes("sono") || frase.includes("insônia")) {
-        resposta = "Para melhorar o sono, temos um kit ótimo com chá de maracujá, mulungu e mel puro.";
+      const texto = frase.toLowerCase();
+
+      if (texto.includes("inchaço") || texto.includes("inchada") || texto.includes("barriga") || texto.includes("estufada")) {
+        resposta = "Ah, entendi! O inchaço abdominal é bem comum. Recomendo o nosso Kit Detox com chá de hortelã, sene e granola com cúrcuma.";
+      } else if (texto.includes("ansiedade") || texto.includes("ansioso") || texto.includes("nervoso") || texto.includes("preocupado")) {
+        resposta = "Entendi, ansiedade pode ser bem difícil. Sugiro o Kit Relax com chá de camomila, melissa e lavanda.";
+      } else if (texto.includes("sono") || texto.includes("insônia") || texto.includes("dormir") || texto.includes("acordando")) {
+        resposta = "Para melhorar seu sono, temos um kit natural com chá de maracujá, mulungu e mel puro. Pode te ajudar a relaxar.";
       }
+
       speak(resposta);
       output.textContent += `\nNatália: ${resposta}`;
     }
